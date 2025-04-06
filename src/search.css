@@ -1,0 +1,46 @@
+.search {
+	width: 100%;
+	min-height: 100vh;
+	height: 100%;
+	font-family: "Solid Mono";
+	padding: 0 32px 32px 32px;
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
+	position: relative;
+}
+
+.search-container {
+	display: flex;
+	overflow-y: scroll;
+	height: calc(100vh - 78px);
+	max-height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: start;
+	gap: 50px;
+	row-gap: 62px;
+	flex-wrap: wrap;
+	margin-bottom: 32px;
+	padding: 50px 0;
+}
+
+.search-container::-webkit-scrollbar {
+	width: 10px;
+}
+
+/* Track */
+.search-container::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+/* Handle */
+.search-container::-webkit-scrollbar-thumb {
+	background: #202033;
+	border-radius: 10px;
+}
+
+/* Handle on hover */
+.search-container::-webkit-scrollbar-thumb:hover {
+	background: #aaa;
+}
