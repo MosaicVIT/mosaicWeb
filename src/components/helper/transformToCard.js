@@ -12,6 +12,7 @@ export const transformToCard = (item) => {
           tags: item?.assigned_tags || ["Data Learning", "NLP", "ML"],
           type: "AI Tool",
           link: item?.source?.url,
+          id:item?._id || item?.id,
         };
   
       case "Article":
@@ -26,6 +27,7 @@ export const transformToCard = (item) => {
           tags: item?.assigned_tags ||
             item?.content?.keywords || ["Data Learning", "NLP", "ML"],
           link: item?.source?.url,
+          id:item?._id || item?.id,
         };
   
       case "Model":
@@ -38,6 +40,7 @@ export const transformToCard = (item) => {
           tags: item?.assigned_tags ||
             item?.content?.keywords || ["Data Learning", "NLP", "ML"],
           link: item?.Link,
+          id:item?._id || item?.id,
         };
     }
   };

@@ -1,6 +1,7 @@
 import React from "react";
 import "./card.css";
 import { LuArrowUpRight } from "react-icons/lu";
+import { Link } from "react-router-dom";
 
 const maxNCharacters = (text, n) => {
   if (!text) return text;
@@ -8,6 +9,16 @@ const maxNCharacters = (text, n) => {
     return text.slice(0, n) + "...";
   }
   return text;
+};
+
+const getUrl = (id, type) => {
+  const typeMap = {
+    Model: "models",
+    Article: "articles",
+    "AI Tool": "ai-tools",
+  };
+
+  return `/${typeMap[type]}/${id}`;
 };
 export const Box = ({
   bgColor = "#fff",
@@ -18,8 +29,8 @@ export const Box = ({
   articleType = "Model",
 }) => {
   return (
-    <a
-      href={data?.link || ""}
+    <Link
+      to={getUrl(data.id, articleType)}
       className="box"
       style={{ "--txt-color": textColor }}
     >
@@ -27,7 +38,9 @@ export const Box = ({
         <div className="tab-title">
           <p>{articleType}</p>
           <div className="tab-arrow" style={{ "--tab-arrow-bg": tabBg }}>
-            <LuArrowUpRight color={tabArrow} size={"30px"} />
+            <a href={data?.link || ""} style={{ "--txt-color": textColor }} onClick={(e) => e.stopPropagation()} target="_blank" rel="noopener noreferrer">
+              <LuArrowUpRight color={tabArrow} size={"30px"} />
+            </a>
           </div>
         </div>
         <img alt="article-photo" src={data?.bg} />
@@ -50,6 +63,6 @@ export const Box = ({
           <p className="date">{data?.date}</p>
         </div>
       </div>
-    </a>
+    </Link>
   );
 };

@@ -14,27 +14,27 @@ import Search from "./pages/search";
 import Timeline from "./pages/timeline";
 
 function App() {
+  return (
+    <div className="App">
+      <HashRouter>
+        <Background />
+        <Header />
+        <Routes>
+          <Route path="/models/:id" element={<Model />} />
+          <Route path="/articles/:id" element={<Article />} />
+          <Route path="/ai-tools/:id" element={<AITool />} />
 
-	
-	return (
-		<div className="App">
-			<HashRouter>
-				<Background />
-				<Header />
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/foryou" element={<ForYou />} />
-					<Route path="/foryou/models/abc" element={<Model />} />
-					<Route path="/foryou/articles/abc" element={<Article />} />
-					<Route path="/foryou/ai-tools/abc" element={<AITool />} />
-					<Route path="/search" element={<Search />} />
-					<Route path="/discovery" element={<Discovery/>} />
-					<Route path="/timeline" element={<Timeline />} />
-					<Route path="/subscription" element={<div>Search</div>} />
-				</Routes>
-			</HashRouter>
-		</div>
-	);
+          <Route path="/foryou" element={<ForYou />} />
+
+          <Route path="/search" element={<Search />} />
+          <Route path="/discovery" element={<Discovery />} />
+          <Route path="/timeline" element={<Timeline />} />
+          <Route path="/subscription" element={<div>Search</div>} />
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </HashRouter>
+    </div>
+  );
 }
 
 export default App;
