@@ -3,6 +3,7 @@ import "./model.css";
 import { Spin } from "antd";
 import { useParams } from "react-router-dom";
 import { apiClient } from "../../apiclient";
+import { getImageUrl } from "../helper/colors";
 
 const Model = () => {
   const { id } = useParams();
@@ -66,7 +67,11 @@ const Model = () => {
           <span>•</span>
           <p>{modeldata["Publication date"]}</p>
         </div>
-        <img className="model-bg-img" src="./bg-1.png" alt="model-bg-img" />
+        <img
+          className="model-bg-img"
+          src={getImageUrl("/bg-1.png")}
+          alt="model-bg-img"
+        />
         <h2>Overview</h2>
         <p className="model-para">{modeldata.Abstract}</p>
         <div className="vert-separator" />

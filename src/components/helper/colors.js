@@ -16,3 +16,7 @@ export const getColor = (i) => {
   const index = i % colorConfigs.length;
   return colorConfigs[index];
 };
+
+export const getImageUrl = (i) => {
+  return process.env.PUBLIC_URL + i;
+};

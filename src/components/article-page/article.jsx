@@ -3,6 +3,7 @@ import "./article.css";
 import { apiClient } from "../../apiclient";
 import { useParams } from "react-router-dom";
 import { Spin } from "antd";
+import { getImageUrl } from "../helper/colors";
 // import { articledata } from "../../data";
 
 const Article = () => {
@@ -29,7 +30,7 @@ const Article = () => {
   if (!articledata) {
     return (
       <div className="loading-container">
-        <Spin/>
+        <Spin />
       </div>
     );
   }
@@ -60,7 +61,11 @@ const Article = () => {
           <span>•</span>
           <p>{articledata.source.scrape_timestamp.split("T")[0]}</p>
         </div>
-        <img className="article-bg-img" src="./ph-1.jpg" alt="article-bg-img" />
+        <img
+          className="article-bg-img"
+          src={getImageUrl("/ph-1.jpg")}
+          alt="article-bg-img"
+        />
         <h2>Description</h2>
         <p className="article-para">{articledata.content.description}</p>
         <div className="vert-separator" />
