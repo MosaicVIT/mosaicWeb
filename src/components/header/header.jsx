@@ -80,7 +80,6 @@ const Pages = [
   { name: "For you", path: "/foryou" },
   { name: "Discovery Graph", path: "/discovery" },
   { name: "Timeline", path: "/timeline" },
-  { name: "Subscription", path: "/subscription" },
 ];
 
 const getLastPath = (pathname) => {
@@ -93,13 +92,17 @@ const getLastPath = (pathname) => {
 const Header = () => {
   const location = useLocation();
   const pathname = location.pathname;
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const ref = React.useRef(null);
   return (
     <HeaderContainer>
-      <img
-        src={process.env.PUBLIC_URL + "/mosaic_logo.png"}
-        alt="Logo"
-        style={{ height: "35px" }}
-      />
+      <Link to={"/"}>
+        <img
+          src={process.env.PUBLIC_URL + "/mosaic_logo.png"}
+          alt="Logo"
+          style={{ height: "35px" }}
+        />
+      </Link>
 
       <Nav>
         {Pages.map((page) => (
@@ -114,13 +117,25 @@ const Header = () => {
         ))}
       </Nav>
 
-      <FilterIcon style={{ marginRight: "0.5rem", fontSize: 30 }} />
-
       <SearchContainer type="text">
-        <SearchInput type="text" placeholder="Search" />
-        <SearchButton>
-          <ArrowIcon />
-        </SearchButton>
+        <SearchInput
+          type="text"
+          placeholder="Search"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              ref.current.click();
+            }
+          }}
+        />
+        <Link to={`/search?query=${searchTerm}`} ref={ref}>
+          <SearchButton>
+            <ArrowIcon />
+          </SearchButton>
+        </Link>
       </SearchContainer>
     </HeaderContainer>
   );

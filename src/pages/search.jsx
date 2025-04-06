@@ -1,81 +1,68 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box } from "../components/cards/arcard";
 import "../search.css";
+import { useLocation } from "react-router-dom";
+import { apiClient } from "../apiclient";
+import { transformToCard } from "../components/helper/transformToCard";
+import { getColor } from "../components/helper/colors";
+import { Spin } from "antd";
 
 const Search = () => {
-	const data = {
-		title: "How these top growing AIs can be beneficial for you",
-		views: 1453,
-		date: "05-04-2025",
-		bg: "./bg-1.png",
-		tags: ["Data Learning", "NLP", "ML"],
-	};
-	return (
-		<div className="search">
-			<div className="search-container">
-				{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
-					if (index % 6 === 0)
-						return (
-							<Box
-								data={data}
-								key={index}
-								bgColor="#fff"
-								textColor="#000"
-							/>
-						);
-					else if (index % 6 === 1)
-						return (
-							<Box
-								data={data}
-								key={index}
-								bgColor="#D093FF"
-								textColor="#000"
-							/>
-						);
-					else if (index % 6 === 2)
-						return (
-							<Box
-								data={data}
-								key={index}
-								bgColor="#363636"
-								textColor="#fff"
-								articleType="Product"
-							/>
-						);
-					else if (index % 6 === 3)
-						return (
-							<Box
-								data={data}
-								key={index}
-								bgColor="#939AFF"
-								textColor="#000"
-							/>
-						);
-					else if (index % 6 === 4)
-						return (
-							<Box
-								data={data}
-								key={index}
-								bgColor="#CCCCCC"
-								textColor="#000"
-								tabArrow="#cccccc"
-								tabBg="#181D39"
-								articleType="Article"
-							/>
-						);
-					else if (index % 6 === 5)
-						return (
-							<Box
-								data={data}
-								key={index}
-								bgColor="#93EDFF"
-								textColor="#000"
-							/>
-						);
-				})}
-			</div>
-		</div>
-	);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const query = queryParams.get("query"); // ?user=123
+
+  useEffect(() => {
+    setData([]);
+    setLoading(true);
+    apiClient
+      .get("/search", {
+        params: {
+          query: query,
+        },
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .then((out) => {
+        console.log(out);
+        setData(out.map(transformToCard).filter((i) => i));
+        setLoading(false);
+      });
+  }, [query]);
+
+  return (
+    <div className="search">
+      {loading && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100vw",
+          }}
+        >
+          <Spin />
+        </div>
+      )}
+      <div className="search-container">
+        {data.map((item, index) => {
+          const { bgColor, textColor } = getColor(index);
+          return (
+            <Box
+              data={item}
+              key={index}
+              bgColor={bgColor}
+              textColor={textColor}
+              articleType={item.type}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 export default Search;
