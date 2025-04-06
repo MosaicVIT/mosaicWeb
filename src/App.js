@@ -11,6 +11,7 @@ import Article from "./components/article-page/article";
 import AITool from "./components/ai-tool-page/ai-tool";
 import Home from "./pages/home";
 import Search from "./pages/search";
+import Timeline from "./pages/timeline";
 
 function App() {
 
@@ -28,7 +29,7 @@ function App() {
 					<Route path="/foryou/ai-tools/abc" element={<AITool />} />
 					<Route path="/search" element={<Search />} />
 					<Route path="/discovery" element={<Discovery/>} />
-					<Route path="/timeline" element={<div>Timeline</div>} />
+					<Route path="/timeline" element={<Timeline />} />
 					<Route path="/subscription" element={<div>Search</div>} />
 				</Routes>
 			</HashRouter>
