@@ -31,6 +31,7 @@
   justify-content: start;
   gap: 56px;
   row-gap: 62px;
+  
   flex-wrap: wrap;
   margin-bottom: 32px;
 }

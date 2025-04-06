@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import GraphView from "../components/graph/graph";
+import Plot2D from "../components/dottedGraph/dottedGraph";
+import { apiClient } from "../apiclient";
+import { transformToCard } from "../components/helper/transformToCard";
+import { Box } from "../components/cards/arcard";
+import { getColor } from "../components/helper/colors";
+import { Spin } from "antd";
 
 export const PageContainer = styled.div`
   display: flex;
@@ -14,11 +20,9 @@ export const LeftPanel = styled.div`
   flex: 4;
   overflow-y: auto;
   padding-right: 1rem;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
   height: 100%;
-  overflow-y: hidden;
+  overflow-y: auto;
 `;
 
 export const RightPanel = styled.div`
@@ -35,13 +39,93 @@ export const RightPanel = styled.div`
 `;
 
 const Discovery = () => {
+  const [coords, setCoords] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [data, setData] = React.useState([]);
+  useEffect(() => {
+    apiClient
+      .get("/initialize-discover")
+      .then((res) => {
+        return res.data;
+      })
+      .then((out) => {
+        console.log(out);
+        setCoords(out);
+      });
+  }, []);
+
+  const searchAndShow = (id) => {
+    setData([]);
+    setLoading(true);
+    apiClient
+      .get("/getsimilar", {
+        params: {
+          id: id,
+        },
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .then((out) => {
+        setData(out.map(transformToCard).filter((i) => i));
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  };
+
   return (
     <PageContainer>
       <LeftPanel>
-        {/* <GraphView /> */}
+        {loading && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Spin />
+          </div>
+        )}
+
+        {data.length === 0 && !loading && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              height: "100%",
+            }}
+          >
+            <h1 style={{ color: "#fff" }}>Click on a node to discover</h1>
+            <h3 style={{ color: "#ffffffbb" }}>
+              On selecting a node, you will be able to see similar items/ nodes
+            </h3>
+          </div>
+        )}
+        <div className="box-container">
+          {data.map((item, index) => {
+            const { bgColor, textColor } = getColor(index);
+            return (
+              <Box
+                data={item}
+                key={index}
+                bgColor={bgColor}
+                textColor={textColor}
+                articleType={item.type}
+              />
+            );
+          })}
+        </div>
       </LeftPanel>
       <RightPanel>
-        <GraphView />
+        {coords.length > 0 && (
+          <Plot2D coords={coords} searchAndShow={searchAndShow} />
+        )}
       </RightPanel>
     </PageContainer>
   );

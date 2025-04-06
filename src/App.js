@@ -13,6 +13,8 @@ import Home from "./pages/home";
 import Search from "./pages/search";
 
 function App() {
+
+	
 	return (
 		<div className="App">
 			<HashRouter>
@@ -25,7 +27,7 @@ function App() {
 					<Route path="/foryou/articles/abc" element={<Article />} />
 					<Route path="/foryou/ai-tools/abc" element={<AITool />} />
 					<Route path="/search" element={<Search />} />
-					<Route path="/discovery" element={<div>Discovery</div>} />
+					<Route path="/discovery" element={<Discovery/>} />
 					<Route path="/timeline" element={<div>Timeline</div>} />
 					<Route path="/subscription" element={<div>Search</div>} />
 				</Routes>

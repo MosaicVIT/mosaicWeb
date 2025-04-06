@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ReactFlow, Background, Controls } from "@xyflow/react";
 import { v4 as uuid } from "uuid";
 import { Handle } from "@xyflow/react";
+import { apiClient } from "../../apiclient";
 
 // Start with 3 initial nodes arranged arbitrarily
 const initialNodes = [
@@ -33,6 +34,16 @@ const initialEdges = [
 const GraphView = () => {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
+
+  useEffect(() => {
+    apiClient.get("/initialize-discover").then((res) => {
+      return res.data}
+    ).then((out) => {
+
+      console.log(out)
+    }
+  )
+  },[])
 
   const nodeTypes = {
     circle: CircleNode,

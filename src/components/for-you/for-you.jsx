@@ -1,109 +1,190 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box } from "../cards/arcard";
 import "./for-you.css";
+import { apiClient } from "../../apiclient";
+import { Pagination, Spin } from "antd";
 
-const CardTypes = ["All", "Model", "Product", "Article"];
+const pageSize = 24;
+const CardTypes = ["All", "Model", "AI Tool", "Article"];
+
+const transformToCard = (item) => {
+  switch (item.type) {
+    case "AI Tool":
+      const imgs = item?.content?.images;
+      let img =
+        (imgs[1] && imgs[1].url) || (imgs[0] && imgs[0].url) || "./bg-1.png";
+      return {
+        title: item?.metadata?.title,
+        views: Math.floor(Math.random() * 1000),
+        date: item?.metadata?.published_date || new Date().toLocaleDateString(),
+        bg: img,
+        tags: item?.assigned_tags || ["Data Learning", "NLP", "ML"],
+        type: "AI Tool",
+        link: item?.source?.url,
+      };
+
+    case "Article":
+      return {
+        type: "Article",
+        title: item?.metadata?.title,
+        date: item?.metadata?.created_at
+          ? new Date(item?.metadata?.created_at).toLocaleDateString()
+          : new Date().toLocaleDateString(),
+        views: Math.floor(Math.random() * 1000),
+        bg: item?.metadata?.image_url || "./bg-1.png",
+        tags: item?.assigned_tags ||
+          item?.content?.keywords || ["Data Learning", "NLP", "ML"],
+        link: item?.source?.url,
+      };
+
+    case "Model":
+      return {
+        type: "Model",
+        title: item?.Model,
+        date: item["Publication date"] || new Date().toLocaleDateString(),
+        views: Math.floor(Math.random() * 1000),
+        bg: item?.metadata?.image_url || "./bg-1.png",
+        tags: item?.assigned_tags ||
+          item?.content?.keywords || ["Data Learning", "NLP", "ML"],
+        link: item?.Link,
+      };
+  }
+};
+
+const colorConfigs = [
+  { bgColor: "#fff", textColor: "#000" },
+  { bgColor: "#D093FF", textColor: "#000" },
+  { bgColor: "#363636", textColor: "#fff" },
+  { bgColor: "#939AFF", textColor: "#000" },
+  {
+    bgColor: "#CCCCCC",
+    textColor: "#000",
+    tabArrow: "#cccccc",
+    tabBg: "#181D39",
+  },
+  { bgColor: "#93EDFF", textColor: "#000" },
+];
+
+const getColor = (i) => {
+  const index = i % colorConfigs.length;
+  return colorConfigs[index];
+};
 const ForYou = () => {
   const [activeType, setActiveType] = React.useState("All");
-  const data = {
-    title: "How these top growing AIs can be beneficial for you",
-    views: 1453,
-    date: "05-04-2025",
-    bg: "./bg-1.png",
-    tags: ["Data Learning", "NLP", "ML"],
+  const [page, setPage] = React.useState(1);
+  const [totalCount, setTotalCount] = React.useState(0);
+
+  const [data, setData] = React.useState([]);
+
+  useEffect(() => {
+    fetchData(page);
+  }, []);
+
+  const fetchData = async (page, type = activeType) => {
+    apiClient
+      .get("/listings", {
+        params: {
+          page,
+          page_size: pageSize,
+          type:type,
+        },
+      })
+
+      .then((res) => res.data)
+
+      .then((out) => {
+        const { data, total_count } = out;
+        setData(data.map(transformToCard).filter((i) => i));
+        setTotalCount(total_count);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
   return (
-    <div className="for-you">
-      <div className="for-you-left">
-        <div className="for-you-navigation">
-          {CardTypes.map((type, index) => {
-            return (
-              <span>
-                <span
-                  key={index}
-                  className={activeType === type ? "active" : ""}
-                  onClick={() => setActiveType(type)}
-                >
-                  {type}
+    <div>
+      <div className="for-you">
+        <div className="for-you-left">
+          <div className="for-you-navigation">
+            {CardTypes.map((type, index) => {
+              return (
+                <span>
+                  <span
+                    key={index}
+                    className={activeType === type ? "active" : ""}
+                    onClick={() => {
+                      setPage(1);
+                      setData([]);
+                      setActiveType(type);
+                      fetchData(1, type);
+                    }}
+                  >
+                    {type}
+                  </span>
+                  {index !== CardTypes.length - 1 && " |"}
                 </span>
-                {index !== CardTypes.length - 1 && " |"}
-              </span>
-            );
-          })}
-          {/* <span className="active">All</span> | <span>Model</span> |{" "}
+              );
+            })}
+            {/* <span className="active">All</span> | <span>Model</span> |{" "}
         <span>Product</span> | <span>Article</span> */}
-        </div>
-        <div className="box-container">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => {
-            if (index % 6 === 0)
-              return (
-                <Box data={data} key={index} bgColor="#fff" textColor="#000" />
-              );
-            else if (index % 6 === 1)
-              return (
-                <Box
-                  data={data}
-                  key={index}
-                  bgColor="#D093FF"
-                  textColor="#000"
-                />
-              );
-            else if (index % 6 === 2)
-              return (
-                <Box
-                  data={data}
-                  key={index}
-                  bgColor="#363636"
-                  textColor="#fff"
-                  articleType="Product"
-                />
-              );
-            else if (index % 6 === 3)
-              return (
-                <Box
-                  data={data}
-                  key={index}
-                  bgColor="#939AFF"
-                  textColor="#000"
-                />
-              );
-            else if (index % 6 === 4)
-              return (
-                <Box
-                  data={data}
-                  key={index}
-                  bgColor="#CCCCCC"
-                  textColor="#000"
-                  tabArrow="#cccccc"
-                  tabBg="#181D39"
-                  articleType="Article"
-                />
-              );
-            else if (index % 6 === 5)
-              return (
-                <Box
-                  data={data}
-                  key={index}
-                  bgColor="#93EDFF"
-                  textColor="#000"
-                />
-              );
-          })}
-        </div>
-      </div>
-      <div className="trending-ai-model">
-        <p className="trending-title">Trending AI Models</p>
-        {[1, 2, 3, 4, 5].map((value, index) => (
-          <div className="trending-card" key={index}>
-            <p>{"nividia/Llama-Nemotron"}</p>
-            <div className="trending-card-footer">
-              <span className="views">
-                {data?.views} {data?.views > 1 ? "views" : "view"}
-              </span>
-              <span className="date">{data?.date}</span>
-            </div>
           </div>
-        ))}
+          <div className="box-container">
+            {data.map((item, index) => {
+              const { bgColor, textColor } = getColor(index);
+              return (
+                <Box
+                  data={item}
+                  key={index}
+                  bgColor={bgColor}
+                  textColor={textColor}
+                  articleType={item.type}
+                />
+              );
+            })}
+          </div>
+          {data.length === 0 && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: 300,
+              }}
+            >
+              <Spin size="small" />
+            </div>
+          )}
+          {data.length > 0 && (
+            <Pagination
+              current={page}
+              onChange={(p) => {
+                setData([]);
+                fetchData(p);
+                setPage(p);
+              }}
+              total={totalCount}
+              pageSize={pageSize}
+              showSizeChanger={false}
+              align="center"
+            />
+          )}
+          <br />
+        </div>
+        <div className="trending-ai-model">
+          <p className="trending-title">Trending AI Models</p>
+          {[1, 2, 3, 4, 5].map((value, index) => (
+            <div className="trending-card" key={index}>
+              <p>{"nividia/Llama-Nemotron"}</p>
+              <div className="trending-card-footer">
+                <span className="views">
+                  {data?.views} {data?.views > 1 ? "views" : "view"}
+                </span>
+                <span className="date">{data?.date}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
