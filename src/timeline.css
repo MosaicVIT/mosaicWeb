@@ -1,0 +1,86 @@
+.timeline-container {
+	position: relative;
+	width: 90%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 60px 0;
+	color: white;
+	font-family: "Solid Mono";
+
+	height: calc(100vh - 89px);
+	overflow-y: scroll;
+}
+
+.timeline-container::-webkit-scrollbar {
+	width: 0px;
+}
+
+.timeline-line {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	bottom: 0;
+	width: 5px;
+	background: #d9d9d9;
+	transform: translateX(-50%);
+	border-radius: 2px;
+}
+
+.timeline-item {
+	position: relative;
+	width: 50%;
+	padding: 20px 30px;
+	box-sizing: border-box;
+}
+
+.timeline-item.left {
+	left: 0;
+	text-align: right;
+}
+
+.timeline-item.right {
+	left: 50%;
+	text-align: left;
+}
+
+.timeline-circle {
+	position: absolute;
+	top: 20px;
+	left: 100%;
+	transform: translateX(-50%);
+	width: 40px;
+	height: 40px;
+	background-color: #2a155c;
+	border: 4px solid #c288ed;
+	border-radius: 50%;
+	z-index: 2;
+}
+
+.timeline-item.right .timeline-circle {
+	left: 0%;
+	transform: translateX(-50%);
+}
+
+.timeline-content {
+	position: relative;
+	background: none;
+}
+
+.type {
+	color: #d4d4d4;
+	font-weight: bold;
+}
+
+.timeline-content .name {
+	color: #fff;
+	font-weight: bold;
+	margin: 0;
+	font-size: 20px;
+}
+
+.feed-name {
+	color: #c288ed;
+	margin-top: 5px;
+	font-size: 14px;
+	line-height: 1.4;
+}
