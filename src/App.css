@@ -2,3 +2,10 @@
   box-sizing: border-box ;
   margin: 0;
 }
+
+@font-face {
+  font-family: 'Solid Mono';
+  src: url('./fonts/Solid-Mono.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}

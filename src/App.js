@@ -1,12 +1,14 @@
-import logo from './logo.svg';
-import './App.css';
-import { Background } from './components/helper/background';
+import logo from "./logo.svg";
+import "./App.css";
+import { Background } from "./components/helper/background";
+import Header from "./components/header/header";
 
 function App() {
   return (
-    <Background className="App">
-    
-    </Background>
+    <div className="App">
+      <Background />
+      <Header />
+    </div>
   );
 }
 
